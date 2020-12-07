@@ -216,6 +216,12 @@ void Window::Mouse(int button, int state, int x, int y)
 
 void Window::Motion(int x, int y)
 {
+    u = p;
+    v = q;
+    p = c;
+    q = d;
+    c = a;
+    d = b;
     a = x;
     b = y;
     glutPostRedisplay();
@@ -223,6 +229,12 @@ void Window::Motion(int x, int y)
 
 void Window::MotionPassive(int x, int y)
 {
+    u = p;
+    v = q;
+    p = c;
+    q = d;
+    c = a;
+    d = b;
     a = x;
     b = y;
     glutPostRedisplay();

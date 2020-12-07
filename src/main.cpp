@@ -19,6 +19,10 @@ int b = 250;
 
 int c = a;
 int d = b;
+int p = c;
+int q = d;
+int u = p;
+int v = q;
 
 int counter = 0;
 
@@ -47,6 +51,9 @@ void myInit() {
 // Display function
 void myDisplay() {
     drawPallete();
+    fill_fix(c, d, a, b);
+    fill_fix(p, q, c, d);
+    fill_fix(p, q, u, v);
     draw_pixel();
     glFlush();
 }

@@ -7,6 +7,10 @@ extern int b;
 
 extern int c;
 extern int d;
+extern int p;
+extern int q;
+extern int u;
+extern int v;
 
 extern float R;
 extern float G;
