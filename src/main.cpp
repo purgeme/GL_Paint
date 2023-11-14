@@ -17,6 +17,7 @@
 #include "opengl/vertexArray.h"
 #include "opengl/shader.h"
 #include "opengl/helpers.h"
+#include "Window.h"
 
 // ImGui vars
 static ImVec4 clearColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -44,17 +45,19 @@ int main(int argc, char **argv)
     // Initialize FreeImage library
     FreeImage_Initialise();
 
-    GLFWwindow *window;
-    if (!glfwInit())
-        return -1;
-    window = glfwCreateWindow(w_W, w_H, "GL_Paint", NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate();
-        return -1;
-    }
-    glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);
+    // GLFWwindow *window;
+    // if (!glfwInit())
+    //     return -1;
+    // window = glfwCreateWindow(w_W, w_H, "GL_Paint", NULL, NULL);
+    // if (!window)
+    // {
+    //     glfwTerminate();
+    //     return -1;
+    // }
+    Window window(w_W, w_H, "GL_Paint");
+
+    glfwMakeContextCurrent(window.window);
+    // glfwSwapInterval(1);
 
     if (glewInit() != GLEW_OK)
         return -1;
@@ -87,7 +90,7 @@ int main(int argc, char **argv)
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
 
     // Setup Platform/Renderer backends
-    ImGui_ImplGlfw_InitForOpenGL(window, true); // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
+    ImGui_ImplGlfw_InitForOpenGL(window.window, true); // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
     ImGui_ImplOpenGL3_Init();
 
     // Setup drawing area
@@ -98,15 +101,13 @@ int main(int argc, char **argv)
     glClear(GL_COLOR_BUFFER_BIT);
     glColor3f(0, 0, 0);
     glMatrixMode(GL_PROJECTION);
-    gluOrtho2D(0, 1000, 500, 0);
+    gluOrtho2D(0, w_W, w_H, 0);
     glPointSize(3.0);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(window.window))
     {
-        glfwSwapBuffers(window);
-        glfwPollEvents();
 
         // Setup ImGui and windows
         ImGui_ImplOpenGL3_NewFrame();
@@ -117,8 +118,19 @@ int main(int argc, char **argv)
         ImGui::Begin("Color picker", &showWindows, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
         ImGui::SetWindowPos(ImVec2(0, 0));
         ImGui::SetWindowSize(ImVec2(leftPanel_Wp * w_W, (colorSelector_H)*leftPanel_Hp * w_H));
-        if (ImGui::ColorButton("Color Picker", paintColor))
+        if (ImGui::ColorButton("Color Picker", paintColor)){
             std::cout << "Color picker" << std::endl;
+            ImGui::OpenPopup("hi-picker");
+        }
+        if (ImGui::BeginPopup("hi-picker"))
+        {
+            ImGui::ColorPicker4("##picker", &paintColor.x, ImGuiColorEditFlags_None, NULL);
+            glBindFramebuffer(GL_FRAMEBUFFER, drawingBuffer);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, drawingTexture, 0);
+            glColor3f(paintColor.x, paintColor.y, paintColor.z);
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            ImGui::EndPopup();
+        }
         ImGui::End();
 
         // Brush selector
@@ -139,36 +151,26 @@ int main(int argc, char **argv)
         ImGui::SetWindowPos(ImVec2(leftPanel_Wp * w_W, 0));
         ImGui::SetWindowSize(ImVec2(drawingArea_Wp * w_W, drawingArea_Hp * w_H));
         ImGui::Image((void *)drawingTexture, ImVec2(drawingArea_Wp * w_W, drawingArea_Hp * w_H));
-        ImGui::End();
-        ImGui::PopStyleVar();
 
         // Actual code to draw
-        if (ImGui::IsMouseDown(ImGuiMouseButton_Left))
+        if (ImGui::IsMouseDown(ImGuiMouseButton_Left) && ImGui::IsWindowHovered(ImGuiHoveredFlags_RootWindow))
         {
-            // if (ImGui::IsMouseHoveringRect(ImVec2((1 - drawingArea_Wp) * w_W, 0), ImVec2(w_W, drawingArea_Hp * w_H)))
-            if (ImGui::IsMouseHoveringRect(ImVec2(0, 0), ImVec2(w_W, w_H)))
-            {
-                // Bind Framebuffer and bind the texture to that framebuffer
-                glBindFramebuffer(GL_FRAMEBUFFER, drawingBuffer);
-                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, drawingTexture, 0);
+            // Bind Framebuffer and bind the texture to that framebuffer
+            glBindFramebuffer(GL_FRAMEBUFFER, drawingBuffer);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, drawingTexture, 0);
 
-                // Drawing part
-                shader.Bind();
-                shader.SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
+            // Drawing part
+            ImVec2 mousePos = ImGui::GetMousePos();
+            draw(mousePos.x-((1-drawingArea_Wp)*w_W), w_H-mousePos.y);
 
-                ImVec2 mousePos = ImGui::GetMousePos();
-                draw(mousePos.x-((1-drawingArea_Wp)*w_W), mousePos.y);
-
-                if (r > 1.0f)
-                    increment = -0.01f;
-                else if (r < 0.0f)
-                    increment = 0.01f;
-
-                r += increment;
-                shader.UnBind();
-                glBindFramebuffer(GL_FRAMEBUFFER, 0);
-            }
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
         }
+
+        glfwSwapBuffers(window.window);
+        glfwPollEvents();
+
+        ImGui::End();
+        ImGui::PopStyleVar();
 
         // Render ImGui stuff
         ImGui::Render();
@@ -191,7 +193,6 @@ int main(int argc, char **argv)
 void draw(float cx, float cy)
 {
     std::cout << "Mouse position: " << cx << ";" << cy << std::endl;
-    // glClear(GL_COLOR_BUFFER_BIT);
     int num_segments = 50;
     int r = 5;
     glBegin(GL_POLYGON);

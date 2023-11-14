@@ -12,7 +12,7 @@ deps = [dependency('GL'), dependency('glu'), glutDep, freeimageDep, dependency('
 srcs = [
         'main.cpp',
         # 'shapes.cpp',
-        # 'Window.cpp',
+        'Window.cpp',
         # 'Window.h',
         # 'shapes.h',
         # 'variables.h',
