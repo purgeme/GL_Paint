@@ -8,7 +8,7 @@ int Window::s_WindowHeight = 0;
 int Window::s_WindowWidth = 0;
 
 Window::Window()
-    :m_WindowPosX(0),m_WindowPosY(0),m_WindowHeight(500),m_WindowWidth(1000),m_WindowName("This Is Not Paint"),m_DisplayMode(0)
+    :m_WindowPosX(0),m_WindowPosY(0),m_WindowHeight(720),m_WindowWidth(1280),m_WindowName("This is not Paint"),m_DisplayMode(0)
 {
     s_WindowHeight = m_WindowHeight;
     s_WindowWidth = m_WindowWidth;

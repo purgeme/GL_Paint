@@ -1,7 +1,6 @@
 #pragma once
 extern int x1, y01, x2, y2;
 
-extern bool l_b;
 extern int a;
 extern int b;
 
@@ -15,8 +14,6 @@ extern int v;
 extern float R;
 extern float G;
 extern float B;
-
-extern int counter;
 
 extern bool hollow;
 

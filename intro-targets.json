@@ -1,0 +1,26 @@
+[
+    {
+        "name": "opengl",
+        "id": "25a6634@@demo@exe",
+        "type": "executable",
+        "defined_in": "src/meson.build",
+        "filename": [
+            "src/demo"
+        ],
+        "build_by_default": true,
+        "target_sources": [
+            {
+                "language": "cpp",
+                "compiler": [],
+                "parameters": [],
+                "sources": [
+                    "/home/purg3me/Projects/GL_Paint/src/main.cpp"
+                ],
+                "generated_sources": []
+            }
+        ],
+        "extra_files": ["/home/purg3me/Projects/GL_Paint/res/**"],
+        "subproject": null,
+        "installed": true
+    }
+]

@@ -2,20 +2,16 @@
 #include <math.h>
 #include "shapes.h"
 
-brushshapes::~brushshapes()
-{
+// Brush shape functions;
+brushshapes::brushshapes(){}
+brushshapes::~brushshapes(){}
 
-}
+void brushshapes::drawShape(float cx, float cy, float r){}
+void brushshapes::drawHollow(float cx, float cy, float r){}
 
-circlebrush::circlebrush()
-{
-
-}
-
-circlebrush::~circlebrush()
-{
-
-}
+// Circle brush definitions
+circlebrush::circlebrush(){}
+circlebrush::~circlebrush(){}
 
 void circlebrush::drawShape(float cx, float cy, float r)
 {
@@ -49,10 +45,9 @@ void circlebrush::drawHollow(float cx, float cy, float r)
     glEnd();
 }
 
-squarebrush::squarebrush()
-{
-
-}
+// Square brush functions
+squarebrush::squarebrush(){}
+squarebrush::~squarebrush(){}
 
 void squarebrush::drawShape(float cx, float cy, float r)
 {
@@ -77,11 +72,9 @@ void squarebrush::drawHollow(float cx, float cy, float r)
 }
 
 
-
-trianglebrush::trianglebrush()
-{
-
-}
+// Triangle brush definitions
+trianglebrush::trianglebrush(){}
+trianglebrush::~trianglebrush(){}
 
 void trianglebrush::drawShape(float cx, float cy, float r)
 {
@@ -99,7 +92,6 @@ void trianglebrush::drawShape(float cx, float cy, float r)
     glVertex2f(x3, y3);
     glEnd();
 }
-
 
 void trianglebrush::drawHollow(float cx, float cy, float r)
 {
