@@ -18,6 +18,14 @@
 #include "opengl/shader.h"
 #include "opengl/helpers.h"
 #include "Window.h"
+#include "functions.h"
+#include "variables.h"
+
+// Drawing vars
+int size_brush = 20;
+bool hollow = false;
+int shape[5] = { 0,1,2,3,4 };
+int option = shape[line];
 
 // ImGui vars
 static ImVec4 clearColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -30,7 +38,7 @@ const float w_H = 720.0f;
 const float w_W = 1280.0f;
 const float leftPanel_Hp = 1.0f;
 const float leftPanel_Wp = 0.1f;
-const float colorSelector_H = 0.3f;
+const float colorSelector_H = 0.2f;
 const float drawingArea_Hp = 1.0f;
 const float drawingArea_Wp = 0.9f;
 
@@ -45,19 +53,9 @@ int main(int argc, char **argv)
     // Initialize FreeImage library
     FreeImage_Initialise();
 
-    // GLFWwindow *window;
-    // if (!glfwInit())
-    //     return -1;
-    // window = glfwCreateWindow(w_W, w_H, "GL_Paint", NULL, NULL);
-    // if (!window)
-    // {
-    //     glfwTerminate();
-    //     return -1;
-    // }
     Window window(w_W, w_H, "GL_Paint");
 
     glfwMakeContextCurrent(window.window);
-    // glfwSwapInterval(1);
 
     if (glewInit() != GLEW_OK)
         return -1;
@@ -118,7 +116,7 @@ int main(int argc, char **argv)
         ImGui::Begin("Color picker", &showWindows, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
         ImGui::SetWindowPos(ImVec2(0, 0));
         ImGui::SetWindowSize(ImVec2(leftPanel_Wp * w_W, (colorSelector_H)*leftPanel_Hp * w_H));
-        if (ImGui::ColorButton("Color Picker", paintColor)){
+        if (ImGui::ColorButton("Color Picker", paintColor, 0, ImVec2(leftPanel_Wp*w_W-17, (colorSelector_H)*leftPanel_Hp*w_H-17))){
             std::cout << "Color picker" << std::endl;
             ImGui::OpenPopup("hi-picker");
         }
@@ -137,12 +135,26 @@ int main(int argc, char **argv)
         ImGui::Begin("Brush Selector", &showWindows, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
         ImGui::SetWindowPos(ImVec2(0, colorSelector_H * leftPanel_Hp * w_H));
         ImGui::SetWindowSize(ImVec2(leftPanel_Wp * w_W, (1 - colorSelector_H) * leftPanel_Hp * w_H));
-        if (ImGui::Button("Square"))
-            std::cout << "Square button" << std::endl;
-        if (ImGui::Button("Circle"))
-            std::cout << "Circle button" << std::endl;
-        if (ImGui::Button("Triangle"))
-            std::cout << "Triangle button" << std::endl;
+        if (ImGui::Button("Circle")){
+            hollow = false;
+            setShape(0);
+        }
+        if (ImGui::Button("Square")){
+            hollow = false;
+            setShape(1);
+        }
+        if (ImGui::Button("Triangle")){
+            hollow = false;
+            setShape(2);
+        }
+        if (ImGui::Button("line")){
+            hollow = false;
+            setShape(3);
+        }
+        if (ImGui::Button("eraser")){
+            hollow = true;
+            setShape(4);
+        }
         ImGui::End();
 
         // Drawing area
@@ -161,7 +173,8 @@ int main(int argc, char **argv)
 
             // Drawing part
             ImVec2 mousePos = ImGui::GetMousePos();
-            draw(mousePos.x-((1-drawingArea_Wp)*w_W), w_H-mousePos.y);
+            // draw(mousePos.x-((1-drawingArea_Wp)*w_W), w_H-mousePos.y);
+            draw_pixel(mousePos.x-((1-drawingArea_Wp)*w_W), w_H-mousePos.y);
 
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
         }

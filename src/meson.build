@@ -11,14 +11,14 @@ deps = [dependency('GL'), dependency('glu'), glutDep, freeimageDep, dependency('
 # srcs = ['main.cpp', 'functions.cpp', 'shapes.cpp', 'Window.cpp']
 srcs = [
         'main.cpp',
-        # 'shapes.cpp',
+        'shapes.cpp',
         'Window.cpp',
-        # 'Window.h',
-        # 'shapes.h',
-        # 'variables.h',
-        # 'functions.h',
-        # 'functions.cpp',
-        # 'paint_area.h',
+        'Window.h',
+        'shapes.h',
+        'variables.h',
+        'functions.h',
+        'functions.cpp',
+        'paint_area.h',
 
         # OpenGL
         # 'opengl/indexBuffer.h',
