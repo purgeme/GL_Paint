@@ -2,14 +2,10 @@
 class brushshapes 
 {
 public:
-    virtual void drawShape(float x, float y, float r)
-    {
-
-    }
-    virtual void drawHollow(float x, float y, float r) {
-    
-    }
-    virtual ~brushshapes();
+    brushshapes();
+    virtual void drawShape(float x, float y, float r);
+    virtual void drawHollow(float x, float y, float r);
+    ~brushshapes();
 };
 
 class circlebrush : public brushshapes 
@@ -27,10 +23,7 @@ public:
     squarebrush();
     void drawShape(float x, float y, float r);
     void drawHollow(float x, float y, float r);
-    ~squarebrush()
-    {
-
-    }
+    ~squarebrush();
 };
 
 class trianglebrush : public brushshapes
@@ -39,8 +32,5 @@ public:
     trianglebrush();
     void drawShape(float x, float y, float r);
     void drawHollow(float x, float y, float r);
-    ~trianglebrush()
-    {
-
-    }
+    ~trianglebrush();
 };
