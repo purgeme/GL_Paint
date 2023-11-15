@@ -18,7 +18,6 @@ srcs = [
         'variables.h',
         'functions.h',
         'functions.cpp',
-        'paint_area.h',
 
         # OpenGL
         # 'opengl/indexBuffer.h',
