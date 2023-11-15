@@ -19,41 +19,42 @@ void saveScreenshot(float imageWidth, float imageHeight, float windowWidth, floa
     delete[] pixelArray;
 }
 
-void draw_pixel(float x, float y) 
+void draw_pixel(int option, float x, float y, float size) 
 {
-    if (true)
+    if (option == shape[line])
     {
-        if (option == shape[line])
-        {
-            shapes->drawShape(x, y, 5);
-        }
-        else if (hollow && option != shape[eraser])
-        {
-            shapes->drawHollow(x, y, size_brush);
-        }
-        else
-        {         
-            shapes->drawShape(x, y, size_brush);
-        }
+        shapes->drawShape(x, y, 5);
+    }
+    else if (hollow && option != shape[eraser])
+    {
+        shapes->drawHollow(x, y, size);
+    }
+    else
+    {         
+        shapes->drawShape(x, y, size);
     }
 }
 
-void setShape(int option)
+void setShape(int type)
 {
-    if (option == shape[square])
+    if (type == shape[square])
     {
+        // option = shape[square];
         shapes = new squarebrush();
     }
-    else if (option == shape[triangle])
+    else if (type == shape[triangle])
     {
+        // option = shape[triangle];
         shapes = new trianglebrush();
     }
-    else if (option == shape[eraser])
+    else if (type == shape[eraser])
     {
+        // option = shape[eraser];
         shapes = new squarebrush();
     }
     else
     {
+        // option = shape[circle];
         shapes = new circlebrush();
     }
 }
@@ -92,11 +93,11 @@ void setShape(int option)
 //          }
 //          else if (hollow && option != shape[eraser])
 //          {
-//              shapes->drawHollow(r, s, size_brush);
+//              shapes->drawHollow(r, s, brushSize);
 //          }
 //          else
 //          {
-//              shapes->drawShape(r, s, size_brush);
+//              shapes->drawShape(r, s, brushSize);
 //          }
 //      }
 //  }

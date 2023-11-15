@@ -17,8 +17,7 @@ extern float B;
 
 extern bool hollow;
 
-extern int size_brush;
-
+extern float brushSize;
 
 extern bool lbuttonDown;
 extern bool rbuttonDown;
@@ -30,4 +29,4 @@ enum menu_type : unsigned char
 
 extern int shape[];
 
-extern int option;
+// extern int option;

@@ -74,18 +74,18 @@ Window::Window(int windowWidth, int windowHeight, const char* windowName)
 //         glClear(GL_COLOR_BUFFER_BIT);
 //         glutPostRedisplay();
 //     }
-//     else if (Key == '+' && size_brush > 0.0f)
+//     else if (Key == '+' && brushSize > 0.0f)
 //     {
-//         size_brush++;
+//         brushSize++;
 //         glutPostRedisplay();
 //     }
 //     else if (Key == 's')
 //     {
 //         saveScreenshot();
 //     }
-//     else if (Key == '-' && size_brush > 1.0f)
+//     else if (Key == '-' && brushSize > 1.0f)
 //     {
-//         size_brush--;
+//         brushSize--;
 //         glutPostRedisplay();
 //     }
 //     else if (Key == 'h')

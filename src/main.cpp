@@ -22,14 +22,14 @@
 #include "variables.h"
 
 // Drawing vars
-int size_brush = 20;
+float brushSize = 20.0f;
 bool hollow = false;
 int shape[5] = { 0,1,2,3,4 };
-int option = shape[line];
+int brushShape = shape[line];
 
 // ImGui vars
 static ImVec4 clearColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-static ImVec4 paintColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+static ImVec4 paintColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
 float my_color[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 bool showWindows = true;
 
@@ -140,36 +140,44 @@ int main(int argc, char **argv)
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, drawingTexture, 0);
             glColor3f(paintColor.x, paintColor.y, paintColor.z);
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
-            setShape(0);
+            // setShape(0);
+            brushShape = shape[circle];
         }
         if (ImGui::Button("Square", ImVec2(leftPanel_Wp*w_W-30, 0))){
             glBindFramebuffer(GL_FRAMEBUFFER, drawingBuffer);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, drawingTexture, 0);
             glColor3f(paintColor.x, paintColor.y, paintColor.z);
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
-            setShape(1);
+            // setShape(1);
+            brushShape = shape[square];
         }
         if (ImGui::Button("Triangle", ImVec2(leftPanel_Wp*w_W-30, 0))){
             glBindFramebuffer(GL_FRAMEBUFFER, drawingBuffer);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, drawingTexture, 0);
             glColor3f(paintColor.x, paintColor.y, paintColor.z);
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
-            setShape(2);
+            // setShape(2);
+            brushShape = shape[triangle];
         }
         if (ImGui::Button("Line", ImVec2(leftPanel_Wp*w_W-30, 0))){
             glBindFramebuffer(GL_FRAMEBUFFER, drawingBuffer);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, drawingTexture, 0);
             glColor3f(paintColor.x, paintColor.y, paintColor.z);
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
-            setShape(3);
+            // setShape(3);
+            brushShape = shape[line];
         }
         if (ImGui::Button("Eraser", ImVec2(leftPanel_Wp*w_W-30, 0))){
             glBindFramebuffer(GL_FRAMEBUFFER, drawingBuffer);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, drawingTexture, 0);
             glColor3f(1.0f, 1.0f, 1.0f);
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
-            setShape(4);
+            // setShape(4);
+            brushShape = shape[eraser];
         } 
+        ImGui::Text("Brush Size");
+        ImGui::SliderFloat(" ", &brushSize, 1.0f, 100.0f, "%.3f", ImGuiSliderFlags_None);
+        ImGui::Checkbox("Hollow", &hollow);
         ImGui::End();
 
         // Save button
@@ -200,7 +208,7 @@ int main(int argc, char **argv)
 
             // Drawing part
             ImVec2 mousePos = ImGui::GetMousePos();
-            draw_pixel(mousePos.x-((1-drawingArea_Wp)*w_W), w_H-mousePos.y);
+            draw_pixel(brushShape, mousePos.x-((1-drawingArea_Wp)*w_W), w_H-mousePos.y, brushSize);
 
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
         }

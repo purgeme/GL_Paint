@@ -2,7 +2,7 @@
 //to show you the power of flex tape..
 
 void gllmenu();
-void draw_pixel(float x, float y);
+void draw_pixel(int option, float x, float y, float size);
 void drawPallete();
 void saveScreenshot(float imageWidth, float imageHeight, float windowWidth, float windowHeight);
 void setShape(int option);
