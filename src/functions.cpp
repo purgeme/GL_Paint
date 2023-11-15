@@ -6,24 +6,14 @@
 //i sawed these functions in half!!!
 static brushshapes* shapes = new circlebrush();
 
-void drawPallete()
-{
-    glBegin(GL_POLYGON);
-    glVertex2f(0, 0);
-    glVertex2f(50, 0);
-    glVertex2f(50, 50);
-    glVertex2f(0, 50);
-    glEnd();
-}
-
-void saveScreenshot() {
+void saveScreenshot(float imageWidth, float imageHeight, float windowWidth, float windowHeight) {
     
-    int bufferSize = 1000 * 500;
+    int bufferSize = windowWidth * windowHeight;
     BYTE* pixelArray = new BYTE[3 * bufferSize];
     glReadBuffer(GL_FRONT);
-    glReadPixels(0, 0, 1000, 500, 0x80E0, GL_UNSIGNED_BYTE, pixelArray);
+    glReadPixels(0, 0, windowWidth, windowHeight, 0x80E0, GL_UNSIGNED_BYTE, pixelArray);
 
-    FIBITMAP* image = FreeImage_ConvertFromRawBits(pixelArray, 1000, 500, 1000 * 3, 24, 0xFF0000, 0x00FF00, 0x0000FF, false);
+    FIBITMAP* image = FreeImage_ConvertFromRawBits(pixelArray, imageWidth, imageHeight, windowWidth * 3, 24, 0xFF0000, 0x00FF00, 0x0000FF, true);
 
     FreeImage_Save(FIF_JPEG, image, "screenshot.jpeg", 0);
     delete[] pixelArray;

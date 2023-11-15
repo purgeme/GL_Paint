@@ -39,14 +39,14 @@ const float w_W = 1280.0f;
 const float leftPanel_Hp = 1.0f;
 const float leftPanel_Wp = 0.1f;
 const float colorSelector_H = 0.2f;
+const float brushSelector_H = 0.7f;
+const float saveWindow_H = 0.1f;
 const float drawingArea_Hp = 1.0f;
 const float drawingArea_Wp = 0.9f;
 
 // Drawing framebuffer and texture
 unsigned int drawingBuffer;
 unsigned int drawingTexture;
-
-void draw(float x, float y);
 
 int main(int argc, char **argv)
 {
@@ -115,7 +115,7 @@ int main(int argc, char **argv)
         // Color selector
         ImGui::Begin("Color picker", &showWindows, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
         ImGui::SetWindowPos(ImVec2(0, 0));
-        ImGui::SetWindowSize(ImVec2(leftPanel_Wp * w_W, (colorSelector_H)*leftPanel_Hp * w_H));
+        ImGui::SetWindowSize(ImVec2(leftPanel_Wp * w_W, colorSelector_H * leftPanel_Hp * w_H));
         if (ImGui::ColorButton("Color Picker", paintColor, 0, ImVec2(leftPanel_Wp*w_W-17, (colorSelector_H)*leftPanel_Hp*w_H-17))){
             std::cout << "Color picker" << std::endl;
             ImGui::OpenPopup("hi-picker");
@@ -134,27 +134,54 @@ int main(int argc, char **argv)
         // Brush selector
         ImGui::Begin("Brush Selector", &showWindows, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
         ImGui::SetWindowPos(ImVec2(0, colorSelector_H * leftPanel_Hp * w_H));
-        ImGui::SetWindowSize(ImVec2(leftPanel_Wp * w_W, (1 - colorSelector_H) * leftPanel_Hp * w_H));
-        if (ImGui::Button("Circle")){
-            hollow = false;
+        ImGui::SetWindowSize(ImVec2(leftPanel_Wp * w_W, brushSelector_H * leftPanel_Hp * w_H));
+        if (ImGui::Button("Circle", ImVec2(leftPanel_Wp*w_W-30, 0))){
+            glBindFramebuffer(GL_FRAMEBUFFER, drawingBuffer);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, drawingTexture, 0);
+            glColor3f(paintColor.x, paintColor.y, paintColor.z);
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
             setShape(0);
         }
-        if (ImGui::Button("Square")){
-            hollow = false;
+        if (ImGui::Button("Square", ImVec2(leftPanel_Wp*w_W-30, 0))){
+            glBindFramebuffer(GL_FRAMEBUFFER, drawingBuffer);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, drawingTexture, 0);
+            glColor3f(paintColor.x, paintColor.y, paintColor.z);
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
             setShape(1);
         }
-        if (ImGui::Button("Triangle")){
-            hollow = false;
+        if (ImGui::Button("Triangle", ImVec2(leftPanel_Wp*w_W-30, 0))){
+            glBindFramebuffer(GL_FRAMEBUFFER, drawingBuffer);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, drawingTexture, 0);
+            glColor3f(paintColor.x, paintColor.y, paintColor.z);
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
             setShape(2);
         }
-        if (ImGui::Button("line")){
-            hollow = false;
+        if (ImGui::Button("Line", ImVec2(leftPanel_Wp*w_W-30, 0))){
+            glBindFramebuffer(GL_FRAMEBUFFER, drawingBuffer);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, drawingTexture, 0);
+            glColor3f(paintColor.x, paintColor.y, paintColor.z);
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
             setShape(3);
         }
-        if (ImGui::Button("eraser")){
-            hollow = true;
+        if (ImGui::Button("Eraser", ImVec2(leftPanel_Wp*w_W-30, 0))){
+            glBindFramebuffer(GL_FRAMEBUFFER, drawingBuffer);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, drawingTexture, 0);
+            glColor3f(1.0f, 1.0f, 1.0f);
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
             setShape(4);
-        }
+        } 
+        ImGui::End();
+
+        // Save button
+        ImGui::Begin("Save Button", &showWindows, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+        ImGui::SetWindowPos(ImVec2(0, (colorSelector_H+brushSelector_H) * leftPanel_Hp * w_H));
+        ImGui::SetWindowSize(ImVec2(leftPanel_Wp * w_W, (saveWindow_H) * leftPanel_Hp * w_H));
+        if (ImGui::Button("Save Image", ImVec2(leftPanel_Wp*w_W-30, 0))){
+            glBindFramebuffer(GL_FRAMEBUFFER, drawingBuffer);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, drawingTexture, 0);
+            saveScreenshot(w_W, w_H, drawingArea_Wp * w_W, drawingArea_Hp * w_H);
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        } 
         ImGui::End();
 
         // Drawing area
@@ -173,7 +200,6 @@ int main(int argc, char **argv)
 
             // Drawing part
             ImVec2 mousePos = ImGui::GetMousePos();
-            // draw(mousePos.x-((1-drawingArea_Wp)*w_W), w_H-mousePos.y);
             draw_pixel(mousePos.x-((1-drawingArea_Wp)*w_W), w_H-mousePos.y);
 
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -201,21 +227,4 @@ int main(int argc, char **argv)
     FreeImage_DeInitialise();
 
     return 0;
-}
-
-void draw(float cx, float cy)
-{
-    std::cout << "Mouse position: " << cx << ";" << cy << std::endl;
-    int num_segments = 50;
-    int r = 5;
-    glBegin(GL_POLYGON);
-    for (int ii = 0; ii < num_segments; ii += 1)
-    {
-        float theta = 2.0f * 3.1415926f * float(ii) / float(num_segments);//get the current angle        
-        float x = r * cosf(theta);//calculate the x component
-        float y = r * sinf(theta);//calculate the y component
-
-        glVertex2f(x + cx, y + cy);//output vertex           
-    }
-    glEnd();
 }
